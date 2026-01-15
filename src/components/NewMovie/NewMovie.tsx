@@ -7,59 +7,52 @@ interface Props {
   onAdd: (movie: Movie) => void;
 }
 
+const defaultMovie = (): Movie => ({
+  title: '',
+  description: '',
+  imgUrl: '',
+  imdbUrl: '',
+  imdbId: '',
+});
+
 export const NewMovie = ({ onAdd }: Props) => {
-  // Increase the count after successful form submission
-  // to reset touched status of all the `Field`s
   const [count, setCount] = useState(0);
-  const [title, setTitle] = useState('');
-  const [descr, setDescr] = useState('');
-  const [imgUrl, setImgUrl] = useState('');
-  const [imdbUrl, setImdbUrl] = useState('');
-  const [imdbId, setImdbId] = useState<string>('');
 
-  const isValidForSubmit = !!(title && imgUrl && imdbUrl && imdbId);
+  const [movie, setMovie] = useState<Movie>(defaultMovie());
 
-  const handleTitle = (newTitle: string): void => {
-    setTitle(newTitle);
-  };
+  const isValidForSubmit = !!(
+    validateTitle(movie.title) &&
+    validateUrl(movie.imgUrl) &&
+    validateUrl(movie.imdbUrl) &&
+    movie.imdbId
+  );
 
-  const handleDescr = (newDescr: string): void => {
-    setDescr(newDescr);
-  };
-
-  const handleImgUrl = (newImgUrl: string): void => {
-    setImgUrl(newImgUrl);
-  };
-
-  const handleImdbUrl = (newImdbUrl: string): void => {
-    setImdbUrl(newImdbUrl);
-  };
-
-  const handleImdbId = (newImdbId: string): void => {
-    setImdbId(newImdbId);
+  const handleChange = (field: keyof Movie) => (newValue: string) => {
+    setMovie(prev => ({ ...prev, [field]: newValue }));
   };
 
   const onSubmit = () => {
-    onAdd({ title, description: descr, imgUrl, imdbUrl, imdbId });
-
-    handleTitle('');
-    handleDescr('');
-    handleImgUrl('');
-    handleImdbUrl('');
-    handleImdbId('');
-
+    onAdd(movie);
+    setMovie(defaultMovie());
     setCount(count + 1);
   };
 
   return (
-    <form className="NewMovie" key={count}>
+    <form
+      className="NewMovie"
+      key={count}
+      onSubmit={event => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
       <h2 className="title">Add a movie</h2>
 
       <TextField
         name="title"
         label="Title"
-        value={title}
-        onChange={handleTitle}
+        value={movie.title}
+        onChange={handleChange('title')}
         validateValue={validateTitle}
         required
       />
@@ -67,15 +60,15 @@ export const NewMovie = ({ onAdd }: Props) => {
       <TextField
         name="description"
         label="Description"
-        value={descr}
-        onChange={handleDescr}
+        value={movie.description}
+        onChange={handleChange('description')}
       />
 
       <TextField
         name="imgUrl"
         label="Image URL"
-        value={imgUrl}
-        onChange={handleImgUrl}
+        value={movie.imgUrl}
+        onChange={handleChange('imgUrl')}
         validateValue={validateUrl}
         required
       />
@@ -83,8 +76,8 @@ export const NewMovie = ({ onAdd }: Props) => {
       <TextField
         name="imdbUrl"
         label="Imdb URL"
-        value={imdbUrl}
-        onChange={handleImdbUrl}
+        value={movie.imdbUrl}
+        onChange={handleChange('imdbUrl')}
         validateValue={validateUrl}
         required
       />
@@ -92,8 +85,8 @@ export const NewMovie = ({ onAdd }: Props) => {
       <TextField
         name="imdbId"
         label="Imdb ID"
-        value={imdbId}
-        onChange={handleImdbId}
+        value={movie.imdbId}
+        onChange={handleChange('imdbId')}
         required
       />
 
@@ -104,10 +97,6 @@ export const NewMovie = ({ onAdd }: Props) => {
             data-cy="submit-button"
             className="button is-link"
             disabled={!isValidForSubmit}
-            onClick={event => {
-              event.preventDefault();
-              onSubmit();
-            }}
           >
             Add
           </button>

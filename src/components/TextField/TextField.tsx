@@ -22,21 +22,17 @@ export const TextField: React.FC<Props> = ({
   placeholder = `Enter ${label}`,
   required = false,
   onChange = () => {},
-  validateValue = val => val.trim().length > 0,
+  validateValue = valueToCheck => valueToCheck.trim().length > 0,
 }) => {
   // generate a unique id once on component load
   const [id] = useState(() => `${name}-${getRandomDigits()}`);
-
-  // To show errors only if the field was touched (onBlur)
   const [touched, setTouched] = useState(false);
-  const hasError = touched && required && !validateValue(value);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    onChange(event.target.value);
-  };
+  const hasError = touched && required && !validateValue(value.trim());
 
   const handleOnBlur = () => {
     setTouched(true);
+    onChange(value.trim());
   };
 
   return (
@@ -55,7 +51,7 @@ export const TextField: React.FC<Props> = ({
           })}
           placeholder={placeholder}
           value={value}
-          onChange={handleChange}
+          onChange={event => onChange(event.target.value)}
           onBlur={handleOnBlur}
         />
       </div>
