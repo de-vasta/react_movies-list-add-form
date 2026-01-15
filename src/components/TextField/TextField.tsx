@@ -22,7 +22,7 @@ export const TextField: React.FC<Props> = ({
   placeholder = `Enter ${label}`,
   required = false,
   onChange = () => {},
-  validateValue = val => !!val,
+  validateValue = val => val.trim().length > 0,
 }) => {
   // generate a unique id once on component load
   const [id] = useState(() => `${name}-${getRandomDigits()}`);
@@ -33,6 +33,10 @@ export const TextField: React.FC<Props> = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(event.target.value);
+  };
+
+  const handleOnBlur = () => {
+    setTouched(true);
   };
 
   return (
@@ -52,7 +56,7 @@ export const TextField: React.FC<Props> = ({
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
-          onBlur={() => setTouched(true)}
+          onBlur={handleOnBlur}
         />
       </div>
 

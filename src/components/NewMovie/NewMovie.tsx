@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextField } from '../TextField';
 import { Movie } from '../../types/Movie';
-import { validateUrl } from '../../helpers/validateUrl';
+import { validateTitle, validateUrl } from '../../helpers/validations';
 
 interface Props {
   onAdd: (movie: Movie) => void;
@@ -42,11 +42,11 @@ export const NewMovie = ({ onAdd }: Props) => {
   const onSubmit = () => {
     onAdd({ title, description: descr, imgUrl, imdbUrl, imdbId });
 
-    setTitle('');
-    setDescr('');
-    setImgUrl('');
-    setImdbUrl('');
-    setImdbId('');
+    handleTitle('');
+    handleDescr('');
+    handleImgUrl('');
+    handleImdbUrl('');
+    handleImdbId('');
 
     setCount(count + 1);
   };
@@ -60,6 +60,7 @@ export const NewMovie = ({ onAdd }: Props) => {
         label="Title"
         value={title}
         onChange={handleTitle}
+        validateValue={validateTitle}
         required
       />
 

@@ -8,3 +8,10 @@ export function validateUrl(url: string): boolean {
 
   return pattern.test(url);
 }
+
+export function validateTitle(title: string): boolean {
+  // Matches movie titles: starts with capital, allows letters/numbers/spaces and punctuation (: - . ' & ! ? ( ))
+  const pattern = /^[A-Z][A-Za-z0-9]*(?:[\s\-:][A-Z]?[A-Za-z0-9.'&!?()]*)*$/;
+
+  return pattern.test(title);
+}
