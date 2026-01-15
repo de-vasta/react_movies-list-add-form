@@ -24,7 +24,7 @@ export const NewMovie = ({ onAdd }: Props) => {
     validateTitle(movie.title) &&
     validateUrl(movie.imgUrl) &&
     validateUrl(movie.imdbUrl) &&
-    movie.imdbId
+    movie.imdbId.trim()
   );
 
   const handleChange = (field: keyof Movie) => (newValue: string) => {
